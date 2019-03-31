@@ -1,4 +1,4 @@
-package org.softuni.lcashop.domain.repository;
+package org.softuni.lcashop.repository;
 
 import org.softuni.lcashop.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
