@@ -43,6 +43,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleServiceModel findByAuthority(String authority) {
-        return this.modelMapper.map(authority, RoleServiceModel.class);
+        return this.modelMapper.map(this.roleRepository.findByAuthority(authority), RoleServiceModel.class);
     }
 }
