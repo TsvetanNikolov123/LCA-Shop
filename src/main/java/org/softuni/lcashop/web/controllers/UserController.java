@@ -32,7 +32,7 @@ public class UserController extends BaseController {
         return super.view("register");
     }
 
-    @PostMapping
+    @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel userRegisterBindingModel){
         if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())){
