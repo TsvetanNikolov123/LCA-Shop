@@ -59,9 +59,18 @@ public class UserController extends BaseController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView profile(Principal principal, ModelAndView modelAndView) {
         modelAndView
-                .addObject("model",
-                        this.modelMapper.map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
+                .addObject("model", this.modelMapper
+                        .map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
 
-        return super.view("profile", modelAndView);
+        return super.view("profile");
+    }
+
+    @GetMapping("/edit")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView editProfile(Principal principal, ModelAndView modelAndView) {
+        modelAndView
+                .addObject("model", this.modelMapper.map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
+
+        return super.view("edit-profile", modelAndView);
     }
 }
