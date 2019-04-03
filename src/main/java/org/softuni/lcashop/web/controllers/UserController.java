@@ -3,6 +3,7 @@ package org.softuni.lcashop.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.models.binding.UserRegisterBindingModel;
 import org.softuni.lcashop.domain.models.service.UserServiceModel;
+import org.softuni.lcashop.domain.models.view.UserProfileViewModel;
 import org.softuni.lcashop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
@@ -28,14 +31,14 @@ public class UserController extends BaseController {
 
     @GetMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public ModelAndView register(){
+    public ModelAndView register() {
         return super.view("register");
     }
 
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel userRegisterBindingModel){
-        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())){
+    public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel userRegisterBindingModel) {
+        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
             return super.view("register");
         }
 
@@ -46,7 +49,17 @@ public class UserController extends BaseController {
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public ModelAndView login(){
+    public ModelAndView login() {
         return super.view("login");
+    }
+
+    @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView profile(Principal principal, ModelAndView modelAndView) {
+        modelAndView
+                .addObject("model",
+                        this.modelMapper.map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
+
+        return super.view("profile", modelAndView);
     }
 }
