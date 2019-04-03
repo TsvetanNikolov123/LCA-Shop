@@ -6,6 +6,7 @@ public class UserEditBindingModel {
     private String oldPassword;
     private String password;
     private String confirmPassword;
+    private String email;
 
     public UserEditBindingModel() {
     }
@@ -40,5 +41,13 @@ public class UserEditBindingModel {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
