@@ -60,7 +60,7 @@ public class UserController extends BaseController {
                 .addObject("model", this.modelMapper
                         .map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
 
-        return super.view("profile");
+        return super.view("profile", modelAndView);
     }
 
     @GetMapping("/edit")
