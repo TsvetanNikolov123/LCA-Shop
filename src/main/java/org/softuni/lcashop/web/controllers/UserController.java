@@ -16,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 
-import java.security.Principal;
-
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
