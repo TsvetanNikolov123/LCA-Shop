@@ -2,19 +2,10 @@ package org.softuni.lcashop.domain.models.view;
 
 public class UserProfileViewModel {
 
-    private String id;
     private String username;
     private String email;
 
     public UserProfileViewModel() {
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUsername() {
