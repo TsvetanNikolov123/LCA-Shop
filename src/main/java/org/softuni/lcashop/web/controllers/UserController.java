@@ -1,6 +1,7 @@
 package org.softuni.lcashop.web.controllers;
 
 import org.modelmapper.ModelMapper;
+import org.softuni.lcashop.domain.models.binding.UserEditBindingModel;
 import org.softuni.lcashop.domain.models.binding.UserRegisterBindingModel;
 import org.softuni.lcashop.domain.models.service.UserServiceModel;
 import org.softuni.lcashop.domain.models.view.UserProfileViewModel;
@@ -8,10 +9,7 @@ import org.softuni.lcashop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -70,5 +68,16 @@ public class UserController extends BaseController {
                 .addObject("model", this.modelMapper.map(this.userService.findUserByUserName(principal.getName()), UserProfileViewModel.class));
 
         return super.view("edit-profile", modelAndView);
+    }
+
+    @PatchMapping("/edit")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView editProfileConfirm(@ModelAttribute UserEditBindingModel model) {
+        if (!model.getPassword().equals(model.getConfirmPassword())) {
+            return super.view("edit-profile");
+        }
+
+        this.userService.editUserProfile(this.modelMapper.map(model, UserServiceModel.class), model.getOldPassword());
+        return super.redirect("/users/profile");
     }
 }
