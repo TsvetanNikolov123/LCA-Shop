@@ -1,7 +1,5 @@
 package org.softuni.lcashop.domain.models.service;
 
-import org.softuni.lcashop.domain.entities.Category;
-
 import java.math.BigDecimal;
 import java.util.List;
 
