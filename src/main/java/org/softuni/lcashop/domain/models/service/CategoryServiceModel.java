@@ -1,10 +1,10 @@
 package org.softuni.lcashop.domain.models.service;
 
-public class CategoryServiceMadel extends BaseServiceModel {
+public class CategoryServiceModel extends BaseServiceModel {
 
     private String name;
 
-    public CategoryServiceMadel() {
+    public CategoryServiceModel() {
     }
 
     public String getName() {
