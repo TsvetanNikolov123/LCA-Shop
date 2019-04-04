@@ -70,4 +70,22 @@ public class CategoryController extends BaseController {
 
         return super.redirect("/categories/all");
     }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView deleteCategory(@PathVariable String id, ModelAndView modelAndView) {
+        modelAndView.addObject("model",
+                this.modelMapper
+                        .map(this.categoryService.findCategoryById(id), CategoryViewModel.class));
+
+        return super.view("category/delete-category", modelAndView);
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView deleteCategoryConfirm(@PathVariable String id) {
+        this.categoryService.deleteCategory(id);
+
+        return super.redirect("/categories/all");
+    }
 }
