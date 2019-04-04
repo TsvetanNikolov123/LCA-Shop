@@ -98,4 +98,25 @@ public class UserController extends BaseController {
         modelAndView.addObject("users", users);
         return super.view("all-users", modelAndView);
     }
+
+    @PostMapping("/set-user/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView setUser(@PathVariable String id) {
+        this.userService.setUserRole(id, "user");
+        return super.redirect("/users/all");
+    }
+
+    @PostMapping("/set-moderator/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView setModerator(@PathVariable String id) {
+        this.userService.setUserRole(id, "moderator");
+        return super.redirect("/users/all");
+    }
+
+    @PostMapping("/set-admin/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView setAdmin(@PathVariable String id) {
+        this.userService.setUserRole(id, "admin");
+        return super.redirect("/users/all");
+    }
 }
