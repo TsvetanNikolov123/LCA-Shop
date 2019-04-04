@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -87,5 +88,15 @@ public class CategoryController extends BaseController {
         this.categoryService.deleteCategory(id);
 
         return super.redirect("/categories/all");
+    }
+
+    @GetMapping("/fetch")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @ResponseBody
+    public List<CategoryViewModel> fetchCategories() {
+        return this.categoryService.findAllCategories()
+                .stream()
+                .map(categoryServiceModel -> this.modelMapper.map(categoryServiceModel, CategoryViewModel.class))
+                .collect(Collectors.toList());
     }
 }
