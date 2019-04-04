@@ -54,11 +54,20 @@ public class CategoryController extends BaseController {
     }
 
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView editCategory(@PathVariable String id, ModelAndView modelAndView) {
         modelAndView.addObject("model",
                 this.modelMapper
                         .map(this.categoryService.findCategoryById(id), CategoryViewModel.class));
 
         return super.view("category/edit-category", modelAndView);
+    }
+
+    @PostMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView editCategoryConfirm(@PathVariable String id, @ModelAttribute CategoryAddBindingModel model) {
+        this.categoryService.editCategory(id, this.modelMapper.map(model, CategoryServiceModel.class));
+
+        return super.redirect("/categories/all");
     }
 }
