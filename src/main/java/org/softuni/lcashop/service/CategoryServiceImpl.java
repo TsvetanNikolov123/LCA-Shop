@@ -38,4 +38,11 @@ public class CategoryServiceImpl implements CategoryService {
                 )
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public CategoryServiceModel findCategoryById(String id) {
+        Category category = this.categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        return this.modelMapper.map(category, CategoryServiceModel.class);
+    }
 }
