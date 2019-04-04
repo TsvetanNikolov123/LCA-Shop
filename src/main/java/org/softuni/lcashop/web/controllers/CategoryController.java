@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/categories")
 public class CategoryController extends BaseController {
@@ -38,5 +40,18 @@ public class CategoryController extends BaseController {
         this.categoryService.addCategory(this.modelMapper.map(model, CategoryServiceModel.class));
 
         return super.redirect("/categories/all");
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView allCategories(ModelAndView modelAndView) {
+        modelAndView.addObject("categories",
+                this.categoryService.findAllCategories()
+                        .stream()
+                        .map(categoryServiceModel ->
+                                this.modelMapper.map(categoryServiceModel, CategoryServiceModel.class))
+                        .collect(Collectors.toList()));
+
+        return super.view("category/all-categories", modelAndView);
     }
 }
