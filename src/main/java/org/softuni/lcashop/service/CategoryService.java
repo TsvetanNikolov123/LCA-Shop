@@ -11,4 +11,6 @@ public interface CategoryService {
     List<CategoryServiceModel> findAllCategories();
 
     CategoryServiceModel findCategoryById(String id);
+
+    CategoryServiceModel editCategory(String id, CategoryServiceModel categoryServiceModel);
 }
