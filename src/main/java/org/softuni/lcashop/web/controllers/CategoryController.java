@@ -3,14 +3,12 @@ package org.softuni.lcashop.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.models.binding.CategoryAddBindingModel;
 import org.softuni.lcashop.domain.models.service.CategoryServiceModel;
+import org.softuni.lcashop.domain.models.view.CategoryViewModel;
 import org.softuni.lcashop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.stream.Collectors;
@@ -53,5 +51,14 @@ public class CategoryController extends BaseController {
                         .collect(Collectors.toList()));
 
         return super.view("category/all-categories", modelAndView);
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView editCategory(@PathVariable String id, ModelAndView modelAndView) {
+        modelAndView.addObject("model",
+                this.modelMapper
+                        .map(this.categoryService.findCategoryById(id), CategoryViewModel.class));
+
+        return super.view("category/edit-category", modelAndView);
     }
 }
