@@ -13,4 +13,6 @@ public interface CategoryService {
     CategoryServiceModel findCategoryById(String id);
 
     CategoryServiceModel editCategory(String id, CategoryServiceModel categoryServiceModel);
+
+    CategoryServiceModel deleteCategory(String id);
 }
