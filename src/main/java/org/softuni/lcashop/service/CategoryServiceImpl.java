@@ -45,4 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException());
         return this.modelMapper.map(category, CategoryServiceModel.class);
     }
+
+    @Override
+    public CategoryServiceModel editCategory(String id, CategoryServiceModel categoryServiceModel) {
+        Category category = this.categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        category.setName(categoryServiceModel.getName());
+        return this.modelMapper.map(this.categoryRepository.saveAndFlush(category), CategoryServiceModel.class);
+    }
 }
