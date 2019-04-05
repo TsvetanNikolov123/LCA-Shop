@@ -75,4 +75,17 @@ public class ProductController extends BaseController {
 
         return super.view("product/details", modelAndView);
     }
+
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView editProduct(@PathVariable String id, ModelAndView modelAndView) {
+        ProductServiceModel productServiceModel = this.productService.findProductById(id);
+        ProductAddBindingModel model = this.modelMapper.map(productServiceModel, ProductAddBindingModel.class);
+        model.setCategories(productServiceModel.getCategories().stream().map(c -> c.getName()).collect(Collectors.toList()));
+
+        modelAndView.addObject("product", model);
+        modelAndView.addObject("productId", id);
+
+        return super.view("product/edit-product", modelAndView);
+    }
 }
