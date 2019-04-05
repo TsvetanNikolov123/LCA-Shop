@@ -4,16 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.models.binding.ProductAddBindingModel;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.domain.models.view.ProductAllViewModel;
+import org.softuni.lcashop.domain.models.view.ProductDetailViewModel;
 import org.softuni.lcashop.service.CategoryService;
 import org.softuni.lcashop.service.CloudinaryService;
 import org.softuni.lcashop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -67,5 +65,14 @@ public class ProductController extends BaseController {
                 .collect(Collectors.toList()));
 
         return super.view("product/all-products", modelAndView);
+    }
+
+    @GetMapping("/details/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView detailsProduct(@PathVariable String id, ModelAndView modelAndView) {
+        modelAndView.addObject("product",
+                this.modelMapper.map(this.productService.findProductById(id), ProductDetailViewModel.class));
+
+        return super.view("product/details", modelAndView);
     }
 }
