@@ -16,7 +16,7 @@ public class ApplicationCloudConfiguration {
     @Value("${cloudinary.api-key}")
     private String cloudApiKey;
 
-    @Value("${cloudinary.api-secred}")
+    @Value("${cloudinary.api-secret}")
     private String cloudApiSecret;
 
     @Bean
@@ -24,7 +24,7 @@ public class ApplicationCloudConfiguration {
         return new Cloudinary(new HashMap<String, Object>() {{
             put("cloud_name", cloudApiName);
             put("api_key", cloudApiKey);
-            put("api_secred", cloudApiSecret);
+            put("api_secret", cloudApiSecret);
         }});
     }
 }
