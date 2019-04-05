@@ -3,6 +3,7 @@ package org.softuni.lcashop.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.models.binding.ProductAddBindingModel;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
+import org.softuni.lcashop.domain.models.view.ProductAllViewModel;
 import org.softuni.lcashop.service.CategoryService;
 import org.softuni.lcashop.service.CloudinaryService;
 import org.softuni.lcashop.service.ProductService;
@@ -54,5 +55,17 @@ public class ProductController extends BaseController {
         productServiceModel.setImageUrl(this.cloudinaryService.uploadImage(model.getImage()));
         this.productService.addProduct(productServiceModel);
         return super.redirect("/products/all");
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView allProducts(ModelAndView modelAndView) {
+        modelAndView.addObject("products", this.productService
+                .findAllProducts()
+                .stream()
+                .map(productServiceModel -> this.modelMapper.map(productServiceModel, ProductAllViewModel.class))
+                .collect(Collectors.toList()));
+
+        return super.view("product/all-products", modelAndView);
     }
 }
