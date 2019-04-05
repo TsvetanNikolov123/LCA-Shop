@@ -36,4 +36,12 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> this.modelMapper.map(product, ProductServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ProductServiceModel findProductById(String id) {
+        return this.productRepository
+                .findById(id)
+                .map(product -> this.modelMapper.map(product, ProductServiceModel.class))
+                .orElseThrow(() -> new IllegalArgumentException());
+    }
 }
