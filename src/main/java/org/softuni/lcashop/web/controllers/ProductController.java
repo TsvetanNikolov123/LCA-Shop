@@ -91,9 +91,30 @@ public class ProductController extends BaseController {
 
     @PostMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ModelAndView editProductConfirm(@PathVariable String id, @ModelAttribute ProductAddBindingModel model){
+    public ModelAndView editProductConfirm(@PathVariable String id, @ModelAttribute ProductAddBindingModel model) {
         this.productService.editProduct(id, this.modelMapper.map(model, ProductServiceModel.class));
         // todo fix product categories disappearing
         return super.redirect("/products/details/" + id);
+    }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView deleteProduct(@PathVariable String id, ModelAndView modelAndView) {
+        ProductServiceModel productServiceModel = this.productService.findProductById(id);
+        ProductAddBindingModel model = this.modelMapper.map(productServiceModel, ProductAddBindingModel.class);
+        model.setCategories(productServiceModel.getCategories().stream().map(c -> c.getName()).collect(Collectors.toList()));
+
+        modelAndView.addObject("product", model);
+        modelAndView.addObject("productId", id);
+
+        return super.view("product/delete-product", modelAndView);
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView deleteProductConfirm(@PathVariable String id) {
+        this.productService.deleteProduct(id);
+
+        return super.redirect("/products/all");
     }
 }
