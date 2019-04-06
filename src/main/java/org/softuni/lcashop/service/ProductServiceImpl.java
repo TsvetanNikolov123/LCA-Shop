@@ -1,6 +1,7 @@
 package org.softuni.lcashop.service;
 
 import org.modelmapper.ModelMapper;
+import org.softuni.lcashop.domain.entities.Category;
 import org.softuni.lcashop.domain.entities.Product;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.repository.ProductRepository;
@@ -43,5 +44,21 @@ public class ProductServiceImpl implements ProductService {
                 .findById(id)
                 .map(product -> this.modelMapper.map(product, ProductServiceModel.class))
                 .orElseThrow(() -> new IllegalArgumentException());
+    }
+
+    @Override
+    public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+
+        product.setName(productServiceModel.getName());
+        product.setDescription(productServiceModel.getDescription());
+        product.setPrice(productServiceModel.getPrice());
+        product.setCategories(
+                productServiceModel.getCategories()
+                        .stream()
+                        .map(c -> this.modelMapper.map(c, Category.class))
+                        .collect(Collectors.toList()));
+
+        return this.modelMapper.map(productRepository.saveAndFlush(product), ProductServiceModel.class);
     }
 }
