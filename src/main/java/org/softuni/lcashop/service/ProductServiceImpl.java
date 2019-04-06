@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
+        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
@@ -49,6 +51,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+
+        productServiceModel.setCategories(
+                this.categoryService.findAllCategories()
+                        .stream()
+                        .filter(c -> productServiceModel.getCategories().contains(c.getId()))
+                        .collect(Collectors.toList())
+        );
 
         product.setName(productServiceModel.getName());
         product.setDescription(productServiceModel.getDescription());
