@@ -117,4 +117,6 @@ public class ProductController extends BaseController {
 
         return super.redirect("/products/all");
     }
+
+    // todo to list products by Category
 }

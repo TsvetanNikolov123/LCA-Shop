@@ -77,4 +77,6 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.delete(product);
         return this.modelMapper.map(product, ProductServiceModel.class);
     }
+
+    // todo add method findAllByCategory
 }
