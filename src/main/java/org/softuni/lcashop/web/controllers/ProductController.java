@@ -88,4 +88,12 @@ public class ProductController extends BaseController {
 
         return super.view("product/edit-product", modelAndView);
     }
+
+    @PostMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView editProductConfirm(@PathVariable String id, @ModelAttribute ProductAddBindingModel model){
+        this.productService.editProduct(id, this.modelMapper.map(model, ProductServiceModel.class));
+        // todo fix product categories disappearing
+        return super.redirect("/products/details/" + id);
+    }
 }
