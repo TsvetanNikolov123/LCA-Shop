@@ -70,4 +70,11 @@ public class ProductServiceImpl implements ProductService {
 
         return this.modelMapper.map(productRepository.saveAndFlush(product), ProductServiceModel.class);
     }
+
+    @Override
+    public ProductServiceModel deleteProduct(String id) {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        this.productRepository.delete(product);
+        return this.modelMapper.map(product, ProductServiceModel.class);
+    }
 }
