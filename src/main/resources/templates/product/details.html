@@ -27,6 +27,11 @@
                     <h4 th:text="'Price: ' + ${product.price}"></h4>
                 </div>
             </div>
+            <div class="row">
+                <div class="col col-md-12 mt-5 text-center">
+                    <a th:href="@{/order/product/{id}(id=${product.id})}" class="btn btn-success">Order</a>
+                </div>
+            </div>
         </div>
     </main>
     <th:block th:replace="fragments/footer"></th:block>
