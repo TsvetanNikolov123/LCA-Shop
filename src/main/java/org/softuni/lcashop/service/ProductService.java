@@ -11,4 +11,6 @@ public interface ProductService {
     List<ProductServiceModel> findAllProducts();
 
     ProductServiceModel findProductById(String id);
+
+    ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel);
 }
