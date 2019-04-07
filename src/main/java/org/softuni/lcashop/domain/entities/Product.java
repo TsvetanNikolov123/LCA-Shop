@@ -3,6 +3,7 @@ package org.softuni.lcashop.domain.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -13,6 +14,7 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     private String imageUrl;
     private List<Category> categories;
+    private Set<Order> orders;
 
     public Product() {
     }
@@ -69,5 +71,14 @@ public class Product extends BaseEntity {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    @OneToMany(targetEntity = Order.class)
+    public Set<Order> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }
