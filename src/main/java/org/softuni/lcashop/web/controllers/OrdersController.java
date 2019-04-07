@@ -1,13 +1,17 @@
 package org.softuni.lcashop.web.controllers;
 
 import org.modelmapper.ModelMapper;
+import org.softuni.lcashop.domain.models.rest.ProductOrderRequestModel;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.domain.models.view.ProductDetailViewModel;
+import org.softuni.lcashop.service.OrderService;
 import org.softuni.lcashop.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,10 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class OrdersController extends BaseController {
 
     private final ProductService productService;
+    private final OrderService orderService;
     private final ModelMapper modelMapper;
 
-    public OrdersController(ProductService productService, ModelMapper modelMapper) {
+    @Autowired
+    public OrdersController(ProductService productService, OrderService orderService, ModelMapper modelMapper) {
         this.productService = productService;
+        this.orderService = orderService;
         this.modelMapper = modelMapper;
     }
 
