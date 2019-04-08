@@ -1,7 +1,6 @@
 package org.softuni.lcashop.web.controllers;
 
 import org.modelmapper.ModelMapper;
-import org.softuni.lcashop.domain.models.rest.ProductOrderRequestModel;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.domain.models.view.OrderViewModel;
 import org.softuni.lcashop.domain.models.view.ProductDetailViewModel;
@@ -12,10 +11,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,19 @@ public class OrdersController extends BaseController {
                 .map(o -> modelMapper.map(o, OrderViewModel.class))
                 .collect(Collectors.toList());
         modelAndView.addObject("orders", viewModels);
+        return view("order/list-orders", modelAndView);
+    }
+
+    @GetMapping("/customer")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView getCustomerOrders(ModelAndView modelAndView, Principal principal) {
+        String username = principal.getName();
+        List<OrderViewModel> viewModels = orderService.findOrdersByCustomer(username)
+                .stream()
+                .map(o -> modelMapper.map(o, OrderViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("orders", viewModels);
+
         return view("order/list-orders", modelAndView);
     }
 }
