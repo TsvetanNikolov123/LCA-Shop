@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ProductionValidationServiceImpl implements ProductValidationService {
+public class ProductValidationServiceImpl implements ProductValidationService {
     @Override
     public boolean isValid(Product product) {
         return product != null;
