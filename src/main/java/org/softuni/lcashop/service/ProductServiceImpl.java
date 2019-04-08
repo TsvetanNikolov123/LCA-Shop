@@ -5,6 +5,7 @@ import org.softuni.lcashop.domain.entities.Category;
 import org.softuni.lcashop.domain.entities.Product;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.repository.ProductRepository;
+import org.softuni.lcashop.validation.ProductValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,29 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final ProductValidationService productValidationService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService, ModelMapper modelMapper) {
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            CategoryService categoryService,
+            ProductValidationService productValidationService,
+            ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
+        this.productValidationService = productValidationService;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public ProductServiceModel addProduct(ProductServiceModel productServiceModel) {
+        if (!productValidationService.isValid(productServiceModel)) {
+            throw new IllegalArgumentException();
+        }
         Product product = this.modelMapper.map(productServiceModel, Product.class);
-        return this.modelMapper.map(this.productRepository.save(product), ProductServiceModel.class);
+        product = this.productRepository.save(product);
+        return this.modelMapper.map(product, ProductServiceModel.class);
     }
 
     @Override
@@ -45,12 +56,12 @@ public class ProductServiceImpl implements ProductService {
         return this.productRepository
                 .findById(id)
                 .map(product -> this.modelMapper.map(product, ProductServiceModel.class))
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
     public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        Product product = this.productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         productServiceModel.setCategories(
                 this.categoryService.findAllCategories()
@@ -68,12 +79,15 @@ public class ProductServiceImpl implements ProductService {
                         .map(c -> this.modelMapper.map(c, Category.class))
                         .collect(Collectors.toList()));
 
-        return this.modelMapper.map(productRepository.saveAndFlush(product), ProductServiceModel.class);
+        return this.modelMapper
+                .map(productRepository.saveAndFlush(product), ProductServiceModel.class);
     }
 
     @Override
     public ProductServiceModel deleteProduct(String id) {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        Product product = this.productRepository
+                .findById(id)
+                .orElseThrow(IllegalArgumentException::new);
         this.productRepository.delete(product);
         return this.modelMapper.map(product, ProductServiceModel.class);
     }
