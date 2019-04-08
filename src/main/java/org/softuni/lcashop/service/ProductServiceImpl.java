@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductServiceModel addProduct(ProductServiceModel productServiceModel) {
         Product product = this.modelMapper.map(productServiceModel, Product.class);
-        return this.modelMapper.map(this.productRepository.saveAndFlush(product), ProductServiceModel.class);
+        return this.modelMapper.map(this.productRepository.save(product), ProductServiceModel.class);
     }
 
     @Override
