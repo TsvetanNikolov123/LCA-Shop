@@ -5,6 +5,7 @@ import org.softuni.lcashop.domain.models.binding.ProductAddBindingModel;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
 import org.softuni.lcashop.domain.models.view.ProductAllViewModel;
 import org.softuni.lcashop.domain.models.view.ProductDetailViewModel;
+import org.softuni.lcashop.error.ProductNotFoundException;
 import org.softuni.lcashop.service.CategoryService;
 import org.softuni.lcashop.service.CloudinaryService;
 import org.softuni.lcashop.service.ProductService;
@@ -119,4 +120,12 @@ public class ProductController extends BaseController {
     }
 
     // todo to list products by Category
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ModelAndView handlerProductNotFound(RuntimeException e) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", e.getMessage());
+
+        return modelAndView;
+    }
 }
