@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.entities.Category;
 import org.softuni.lcashop.domain.entities.Product;
 import org.softuni.lcashop.domain.models.service.ProductServiceModel;
+import org.softuni.lcashop.error.ProductNotFoundException;
 import org.softuni.lcashop.repository.ProductRepository;
 import org.softuni.lcashop.validation.ProductValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,14 @@ public class ProductServiceImpl implements ProductService {
         return this.productRepository
                 .findById(id)
                 .map(product -> this.modelMapper.map(product, ProductServiceModel.class))
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new ProductNotFoundException("Product with given id was not found!"));
     }
 
     @Override
     public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
-        Product product = this.productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = this.productRepository
+                .findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with given id was not found!"));
 
         productServiceModel.setCategories(
                 this.categoryService.findAllCategories()
