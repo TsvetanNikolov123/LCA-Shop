@@ -13,14 +13,13 @@
         <div class="row">
 
             <div class="col-lg-3">
-
                 <h1 class="my-4">LCA Shop</h1>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">Laptops</a>
-                    <a href="#" class="list-group-item">Computers</a>
-                    <a href="#" class="list-group-item">Accessories</a>
+                <a class="list-group-item">
+                    <h2>Categories: </h2>
+                </a>
+                <div class="list-group" th:each="category : ${categories}">
+                    <a href="#" class="list-group-item" th:text="${category.name}"></a>
                 </div>
-
             </div>
             <!-- /.col-lg-3 -->
 
