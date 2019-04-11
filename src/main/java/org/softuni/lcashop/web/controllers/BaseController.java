@@ -4,6 +4,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 public abstract class BaseController {
 
+    private static final String REDIRECT = "redirect:";
+
     public ModelAndView view(String viewName, ModelAndView modelAndView){
         modelAndView.setViewName(viewName);
         return modelAndView;
@@ -14,6 +16,6 @@ public abstract class BaseController {
     }
 
     public ModelAndView redirect(String url){
-        return this.view("redirect:" + url);
+        return this.view(REDIRECT + url);
     }
 }
