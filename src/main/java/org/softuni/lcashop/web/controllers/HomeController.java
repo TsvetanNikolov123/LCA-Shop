@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,14 +26,28 @@ public class HomeController extends BaseController {
 
     @GetMapping("/")
     @PreAuthorize("isAnonymous()")
-    public ModelAndView index() {
-        return super.view("index");
+    public ModelAndView index(ModelAndView modelAndView) {
+        List<CategoryViewModel> categoryViewModels = this.categoryService
+                .findAllCategories()
+                .stream()
+                .map(category -> this.modelMapper.map(category, CategoryViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("categories", categoryViewModels);
+
+        return super.view("index", modelAndView);
     }
 
     @GetMapping("/home")
     @PreAuthorize("isAuthenticated()")
     public ModelAndView home(ModelAndView modelAndView) {
-        modelAndView.addObject("categories", this.categoryService.findAllCategories().stream().map(category -> this.modelMapper.map(category, CategoryViewModel.class)).collect(Collectors.toList()));
+        List<CategoryViewModel> categoryViewModels = this.categoryService
+                .findAllCategories()
+                .stream()
+                .map(category -> this.modelMapper.map(category, CategoryViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("categories", categoryViewModels);
 
         return super.view("home", modelAndView);
     }
