@@ -122,7 +122,7 @@ public class ProductController extends BaseController {
     // todo to list products by Category
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ModelAndView handlerProductNotFound(RuntimeException e) {
+    public ModelAndView handlerProductNotFound(ProductNotFoundException e) {
         ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("message", e.getMessage());
 
