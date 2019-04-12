@@ -2,7 +2,7 @@ package org.softuni.lcashop.web.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.softuni.lcashop.domain.models.view.CategoryViewModel;
-import org.softuni.lcashop.domain.models.view.ProductAllViewModel;
+import org.softuni.lcashop.domain.models.view.ProductDetailViewModel;
 import org.softuni.lcashop.service.CategoryService;
 import org.softuni.lcashop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +47,14 @@ public class HomeController extends BaseController {
                 .map(category -> this.modelMapper.map(category, CategoryViewModel.class))
                 .collect(Collectors.toList());
 
-        List<ProductAllViewModel> productAllViewModels = this.productService.findAllProducts()
+        List<ProductDetailViewModel> productDetailsViewModels = this.productService
+                .findAllProducts()
                 .stream()
-                .map(p -> this.modelMapper.map(p, ProductAllViewModel.class))
+                .map(p -> this.modelMapper.map(p, ProductDetailViewModel.class))
                 .collect(Collectors.toList());
 
         modelAndView.addObject(CATEGORIES_ATTRIBUTE_NAME, categoryViewModels);
-        modelAndView.addObject(PRODUCTS_ATTRIBUTE_NAME, productAllViewModels);
+        modelAndView.addObject(PRODUCTS_ATTRIBUTE_NAME, productDetailsViewModels);
 
         return super.view(INDEX_VIEW_NAME, modelAndView);
     }
