@@ -20,13 +20,20 @@
                 <div class="list-group-item">
                     <div class="nav flex-column nav-pills" id="all-products" role="tablist"
                          aria-orientation="vertical">
-                        <a class="nav-link active" type="radio" id="v-pills-home-tab1" data-toggle="pill" href="#v-pills-home"
-                           role="tab" aria-controls="v-pills-home" aria-selected="true">All Products</a>
-
-                        <th:block th:each="category : ${categories}">
-                            <a class="nav-link" id="v-pills-profile-tab2" data-toggle="pill" href="#v-pills-profile"
-                               role="tab" aria-controls="v-pills-profile" aria-selected="false"
-                               th:text="${category.name}"></a>
+                        <div class="custom-control custom-radio mt-3">
+                            <input type="radio" id="allRadio" name="selection"
+                                   class="custom-control-input"
+                                   value="all">
+                            <label class="h4 custom-control-label" for="allRadio">All</label>
+                        </div>
+                        <th:block th:each="category : ${categories}" th:object="${category}">
+                            <div class="custom-control custom-radio mt-3">
+                                <input type="radio" th:id="|*{name.toLowerCase()}Radio|" name="selection"
+                                       class="custom-control-input"
+                                       th:value="*{name}">
+                                <label class="h4 custom-control-label" th:for="|*{name.toLowerCase()}Radio|"
+                                       th:text="*{name}"></label>
+                            </div>
                         </th:block>
                     </div>
                 </div>
@@ -60,39 +67,74 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-
                 <div class="row">
-                    <th:block th:each="product, iter: ${products}">
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="card h-100">
-                                <a th:href="@{/products/details/{id}(id=${product.id})}">
-                                    <img class="card-img-top" th:src="${product.imageUrl}" alt="product image"></a>
-                                <div class="card-body">
-                                    <h4 class="card-title">
-                                        <a th:href="@{/products/details/{id}(id=${product.id})}"
-                                           th:text="${product.name}"></a>
-                                    </h4>
-                                    <h5 th:text="'$' + ${product.price}">$</h5>
-                                    <p class="card-text" th:text="${product.description}"></p>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                                </div>
-                            </div>
-                        </div>
-                    </th:block>
+                    <div class="products-data"></div>
                 </div>
-                <!-- /.row -->
-
             </div>
-            <!-- /.col-lg-9 -->
-
         </div>
-        <!-- /.row -->
-
     </div>
-    <!-- /.container -->
     <th:block th:replace="fragments/footer"></th:block>
 </div>
+<script>
+    function formatProduct(product) {
+        return '<div class="col-lg-4 col-md-6 mb-4">'
+            + '<div class="card h-100">'
+            + `<a href="/products/details/${product.id}"><img src="${product.imageUrl}" class="card-img-top" alt="Image not loaded..."/></a>`
+            + '<div class="card-body"'
+            + '<h4 class="card-title"'
+            + `<a href="/products/details/${product.id}">Name:  ${product.name}</a>`
+            + '</h4>'
+            + `<h5>Price: $${product.price.toFixed(2)}</h5>`
+            + `<p class="card-text">${product.description}</p>`
+            + '</div>'
+            + '<div class="card-footer">'
+            + '<small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>'
+            + '</div>'
+            + '</div>'
+            + '</div>'
+    }
+
+    $(document).ready(function () {
+        $('#allRadio').attr('checked', true);
+
+        fetch('http://localhost:8080/products/fetch/all')
+            .then((response) => response.json())
+            .then((json) => {
+                $('.products-data').empty();
+
+                if (json.length === 0) {
+                    $('.products-data').append(`<h1 class="text-center font-weight-bold">There are no products in the ${category} category.</h1>`)
+                } else {
+                    for (let i = 0; i < json.length; i += 3) {
+                        $('.products-data').append('<div class="products-row row d-flex justify-content-around mt-5">');
+                        if (i < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i]));
+                        if (i + 1 < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i + 1]));
+                        if (i + 2 < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i + 2]));
+                    }
+                }
+            })
+    });
+
+    $('input[type=radio][name=selection]').change(function () {
+        let category = $(this).val();
+
+        fetch('http://localhost:8080/products/fetch/' + category)
+            .then((response) => response.json())
+            .then((json) => {
+                $('.products-data').empty();
+
+                if (json.length === 0) {
+                    $('.products-data').append(`<h1 class="text-center font-weight-bold">There are no products in the ${category} category.</h1>`)
+                } else {
+                    for (let i = 0; i < json.length; i += 3) {
+                        $('.products-data').append('<div class="products-row row d-flex justify-content-around mt-5">');
+                        if (i < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i]));
+                        if (i + 1 < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i + 1]));
+                        if (i + 2 < json.length) $('.products-data .products-row:last-child').append(formatProduct(json[i + 2]));
+                    }
+                }
+            })
+    });
+</script>
 </body>
 </html>
