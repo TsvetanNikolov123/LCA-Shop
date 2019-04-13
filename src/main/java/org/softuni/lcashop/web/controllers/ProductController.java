@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -119,6 +120,22 @@ public class ProductController extends BaseController {
         return super.redirect("/products/all");
     }
 
+    @GetMapping("/fetch/{category}")
+    @ResponseBody
+    @PreAuthorize("isAnonymous()")
+    public List<ProductAllViewModel> fetchByCategory(@PathVariable String category) {
+        if(category.equals("all")) {
+            return this.productService.findAllProducts()
+                    .stream()
+                    .map(product -> this.modelMapper.map(product, ProductAllViewModel.class))
+                    .collect(Collectors.toList());
+        }
+
+        return this.productService.findAllByCategory(category)
+                .stream()
+                .map(product -> this.modelMapper.map(product, ProductAllViewModel.class))
+                .collect(Collectors.toList());
+    }
     // todo to list products by Category
 
     @ExceptionHandler(ProductNotFoundException.class)
